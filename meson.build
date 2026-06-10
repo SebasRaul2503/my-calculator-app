@@ -14,3 +14,12 @@ engine_lib = static_library('calcengine',
   dependencies: m_dep)
 
 subdir('tests')
+
+gtk_dep = dependency('gtk4')
+
+executable('mycalc',
+  ['src/main.c', 'src/calc_window.c'],
+  include_directories: engine_inc,
+  link_with: engine_lib,
+  dependencies: [gtk_dep, m_dep],
+  install: true)
