@@ -8,7 +8,7 @@ m_dep = cc.find_library('m', required: false)
 engine_inc = include_directories('src')
 
 engine_lib = static_library('calcengine',
-  ['src/lexer.c', 'src/parser.c', 'src/evaluator.c'],
+  ['src/lexer.c', 'src/parser.c', 'src/evaluator.c', 'src/memory_reg.c'],
   include_directories: engine_inc,
   dependencies: m_dep)
 
