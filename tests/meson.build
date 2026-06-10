@@ -4,3 +4,9 @@ test_lexer = executable('test_lexer', 'test_lexer.c',
   include_directories: engine_inc,
   dependencies: m_dep)
 test('lexer', test_lexer)
+
+test_eval = executable('test_eval', 'test_eval.c',
+  link_with: engine_lib,
+  include_directories: engine_inc,
+  dependencies: m_dep)
+test('eval', test_eval)
