@@ -23,3 +23,6 @@ executable('mycalc',
   link_with: engine_lib,
   dependencies: [gtk_dep, m_dep],
   install: true)
+
+install_data('data/io.github.sebastian.Calc.desktop',
+  install_dir: get_option('datadir') / 'applications')

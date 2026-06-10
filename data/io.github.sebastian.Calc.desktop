@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Calc
+Comment=Calculadora científica
+Exec=mycalc
+Icon=accessories-calculator
+Terminal=false
+Categories=Utility;Calculator;
