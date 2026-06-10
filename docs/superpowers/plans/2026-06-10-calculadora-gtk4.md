@@ -1,5 +1,7 @@
 # Plan de implementación: Calculadora científica en C + GTK4
 
+> **Estado:** ✅ Completado. Las 8 tareas se implementaron con TDD y revisión por tarea, y el trabajo se fusionó a `main` el 2026-06-10. Los checkboxes `- [ ]` se conservan como registro histórico del plan original.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Construir una calculadora científica de escritorio en C con GTK4, con motor de evaluación de expresiones propio (descenso recursivo), historial y memoria, distribuible vía un script `.sh`.

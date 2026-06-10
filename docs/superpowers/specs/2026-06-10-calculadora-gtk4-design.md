@@ -2,7 +2,7 @@
 
 - **Fecha:** 2026-06-10
 - **Autor:** Sebastian Castillo
-- **Estado:** Aprobado para planificación
+- **Estado:** Implementado y fusionado a `main` (2026-06-10)
 
 ## Objetivo
 
