@@ -5,22 +5,24 @@
 #include <stdio.h>
 #include <string.h>
 
+#define CALC_FMT "%.10g"
+
 typedef enum {
     BTN_INSERT, BTN_EQUALS, BTN_CLEAR, BTN_BACK,
     BTN_MC, BTN_MR, BTN_MPLUS, BTN_MMINUS
 } BtnKind;
 
-typedef struct { const char *label; const char *insert; BtnKind kind; int row; int col; } Btn;
+typedef struct { const char *label; const char *insert; BtnKind kind; int row; int col; int colspan; } Btn;
 
 static const Btn BUTTONS[] = {
-    {"sin","sin(",BTN_INSERT,0,0}, {"cos","cos(",BTN_INSERT,0,1}, {"tan","tan(",BTN_INSERT,0,2}, {"^","^",BTN_INSERT,0,3}, {"sqrt","sqrt(",BTN_INSERT,0,4},
-    {"asin","asin(",BTN_INSERT,1,0}, {"acos","acos(",BTN_INSERT,1,1}, {"atan","atan(",BTN_INSERT,1,2}, {"ln","ln(",BTN_INSERT,1,3}, {"log","log(",BTN_INSERT,1,4},
-    {"pi","pi",BTN_INSERT,2,0}, {"e","e",BTN_INSERT,2,1}, {"exp","exp(",BTN_INSERT,2,2}, {"abs","abs(",BTN_INSERT,2,3}, {"%","%",BTN_INSERT,2,4},
-    {"(","(",BTN_INSERT,3,0}, {")",")",BTN_INSERT,3,1}, {"MC",NULL,BTN_MC,3,2}, {"MR",NULL,BTN_MR,3,3}, {"M+",NULL,BTN_MPLUS,3,4},
-    {"7","7",BTN_INSERT,4,0}, {"8","8",BTN_INSERT,4,1}, {"9","9",BTN_INSERT,4,2}, {"/","/",BTN_INSERT,4,3}, {"M-",NULL,BTN_MMINUS,4,4},
-    {"4","4",BTN_INSERT,5,0}, {"5","5",BTN_INSERT,5,1}, {"6","6",BTN_INSERT,5,2}, {"*","*",BTN_INSERT,5,3}, {"C",NULL,BTN_CLEAR,5,4},
-    {"1","1",BTN_INSERT,6,0}, {"2","2",BTN_INSERT,6,1}, {"3","3",BTN_INSERT,6,2}, {"-","-",BTN_INSERT,6,3}, {"\xe2\x8c\xab",NULL,BTN_BACK,6,4},
-    {"0","0",BTN_INSERT,7,0}, {".",".",BTN_INSERT,7,1}, {"+","+",BTN_INSERT,7,2}, {"=",NULL,BTN_EQUALS,7,3},
+    {"sin","sin(",BTN_INSERT,0,0,1}, {"cos","cos(",BTN_INSERT,0,1,1}, {"tan","tan(",BTN_INSERT,0,2,1}, {"^","^",BTN_INSERT,0,3,1}, {"sqrt","sqrt(",BTN_INSERT,0,4,1},
+    {"asin","asin(",BTN_INSERT,1,0,1}, {"acos","acos(",BTN_INSERT,1,1,1}, {"atan","atan(",BTN_INSERT,1,2,1}, {"ln","ln(",BTN_INSERT,1,3,1}, {"log","log(",BTN_INSERT,1,4,1},
+    {"pi","pi",BTN_INSERT,2,0,1}, {"e","e",BTN_INSERT,2,1,1}, {"exp","exp(",BTN_INSERT,2,2,1}, {"abs","abs(",BTN_INSERT,2,3,1}, {"%","%",BTN_INSERT,2,4,1},
+    {"(","(",BTN_INSERT,3,0,1}, {")",")",BTN_INSERT,3,1,1}, {"MC",NULL,BTN_MC,3,2,1}, {"MR",NULL,BTN_MR,3,3,1}, {"M+",NULL,BTN_MPLUS,3,4,1},
+    {"7","7",BTN_INSERT,4,0,1}, {"8","8",BTN_INSERT,4,1,1}, {"9","9",BTN_INSERT,4,2,1}, {"/","/",BTN_INSERT,4,3,1}, {"M-",NULL,BTN_MMINUS,4,4,1},
+    {"4","4",BTN_INSERT,5,0,1}, {"5","5",BTN_INSERT,5,1,1}, {"6","6",BTN_INSERT,5,2,1}, {"*","*",BTN_INSERT,5,3,1}, {"C",NULL,BTN_CLEAR,5,4,1},
+    {"1","1",BTN_INSERT,6,0,1}, {"2","2",BTN_INSERT,6,1,1}, {"3","3",BTN_INSERT,6,2,1}, {"-","-",BTN_INSERT,6,3,1}, {"\xe2\x8c\xab",NULL,BTN_BACK,6,4,1},
+    {"0","0",BTN_INSERT,7,0,1}, {".",".",BTN_INSERT,7,1,1}, {"+","+",BTN_INSERT,7,2,1}, {"=",NULL,BTN_EQUALS,7,3,2},
 };
 
 typedef struct {
@@ -42,7 +44,6 @@ static void insert_text(CalcApp *c, const char *text) {
     gtk_editable_insert_text(GTK_EDITABLE(c->entry), text, -1, &pos);
     gtk_editable_set_position(GTK_EDITABLE(c->entry), pos);
     gtk_widget_grab_focus(c->entry);
-    gtk_editable_set_position(GTK_EDITABLE(c->entry), pos);
 }
 
 static void update_mem_label(CalcApp *c) {
@@ -63,7 +64,7 @@ static const char *err_message(CalcStatus s) {
 
 static void history_add_row(CalcApp *c, const char *expr, double result) {
     char text[320];
-    snprintf(text, sizeof(text), "%s = %g", expr, result);
+    snprintf(text, sizeof(text), "%s = " CALC_FMT, expr, result);
     GtkWidget *row = gtk_list_box_row_new();
     GtkWidget *lbl = gtk_label_new(text);
     gtk_widget_set_halign(lbl, GTK_ALIGN_START);
@@ -85,7 +86,7 @@ static void do_evaluate(CalcApp *c) {
         return;
     }
     char buf[64];
-    snprintf(buf, sizeof(buf), "%g", result);
+    snprintf(buf, sizeof(buf), CALC_FMT, result);
     gtk_label_set_text(GTK_LABEL(c->result_label), buf);
     c->last_result = result;
     c->has_last_result = TRUE;
@@ -114,7 +115,7 @@ static void on_button_clicked(GtkButton *btn, gpointer user_data) {
         case BTN_MR:
             if (memreg_has_value(&c->mem)) {
                 char buf[64];
-                snprintf(buf, sizeof(buf), "%g", memreg_recall(&c->mem));
+                snprintf(buf, sizeof(buf), CALC_FMT, memreg_recall(&c->mem));
                 insert_text(c, buf);
             }
             break;
@@ -213,7 +214,7 @@ GtkWidget *calc_window_new(GtkApplication *app) {
         g_object_set_data(G_OBJECT(btn), "kind", GINT_TO_POINTER(b->kind));
         g_object_set_data(G_OBJECT(btn), "insert", (gpointer)b->insert);
         g_signal_connect(btn, "clicked", G_CALLBACK(on_button_clicked), c);
-        gtk_grid_attach(GTK_GRID(grid), btn, b->col, b->row, 1, 1);
+        gtk_grid_attach(GTK_GRID(grid), btn, b->col, b->row, b->colspan, 1);
     }
     gtk_box_append(GTK_BOX(col), grid);
 
