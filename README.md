@@ -164,5 +164,5 @@ DEG/RAD, memoria, historial y todos los códigos de error.
 
 ## Licencia
 
-Sin licencia definida todavía. Si vas a publicarlo, considera añadir un archivo
-`LICENSE` (p. ej. MIT o GPL-3.0).
+Distribuido bajo la licencia **MIT**. Consulta el archivo [`LICENSE`](LICENSE)
+para los términos completos.
