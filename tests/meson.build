@@ -16,3 +16,9 @@ test_memory = executable('test_memory', 'test_memory.c',
   include_directories: engine_inc,
   dependencies: m_dep)
 test('memory', test_memory)
+
+test_history = executable('test_history', 'test_history.c',
+  link_with: engine_lib,
+  include_directories: engine_inc,
+  dependencies: m_dep)
+test('history', test_history)
